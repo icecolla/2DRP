@@ -8,6 +8,7 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private int _width;
     [SerializeField] private int _height;
     [SerializeField] private Tile[] _groundTiles;
+    [SerializeField] private Tile[] _wallTiles;
 
     void Start()
     {
@@ -17,8 +18,18 @@ public class BoardManager : MonoBehaviour
         {
             for (int x = 0; x < _width; x++)
             {
-                int tileNumber = Random.Range(0, _groundTiles.Length);
-                _tilemap.SetTile(new Vector3Int(x, y, 0), _groundTiles[tileNumber]);
+                Tile tile;
+
+                if (x == 0 || y == 0 || x == _width - 1 || y == _height - 1)
+                {
+                    tile = _wallTiles[Random.Range(0, _wallTiles.Length)];
+                }
+                else
+                {
+                    tile =  _groundTiles[Random.Range(0, _groundTiles.Length)];
+                }
+
+                _tilemap.SetTile(new Vector3Int(x, y, 0), tile);
             }
         }
     }
