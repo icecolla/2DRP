@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -39,8 +38,7 @@ public class PlayerController : MonoBehaviour
 
             if (cellData != null && cellData.IsPassable)
             {
-                _cellPosition = newCellTarget;
-                transform.position = _boardManager.CellToWorldPosition(_cellPosition);
+                MoveTo(newCellTarget);
             }
         }
     }
@@ -48,8 +46,12 @@ public class PlayerController : MonoBehaviour
     public void Spawn(BoardManager boardManager, Vector2Int cellPosition)
     {
         _boardManager = boardManager;
-        _cellPosition = cellPosition;
-        
-        transform.position = _boardManager.CellToWorldPosition(cellPosition);
+        MoveTo(cellPosition);
+    }
+
+    public void MoveTo(Vector2Int target)
+    {
+        _cellPosition = target;
+        transform.position = _boardManager.CellToWorldPosition(target);
     }
 }
