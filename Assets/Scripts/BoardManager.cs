@@ -10,20 +10,25 @@ public class BoardManager : MonoBehaviour
     
     private Tilemap _tilemap;
     private CellData[,] _boardData;
+    private Grid _grid;
 
     [SerializeField] private int _width;
     [SerializeField] private int _height;
     [SerializeField] private Tile[] _groundTiles;
     [SerializeField] private Tile[] _wallTiles;
+    
+    public PlayerController Player;
 
     void Start()
     {
         _tilemap = GetComponentInChildren<Tilemap>();
+        _grid = GetComponentInChildren<Grid>();
+        
         _boardData = new CellData[_width, _height];
 
-        for (int y = 0; y < _height; y++)
+        for (int y = 0; y < _height; ++y)
         {
-            for (int x = 0; x < _width; x++)
+            for (int x = 0; x < _width; ++x)
             {
                 Tile tile;
                 _boardData[x, y] = new CellData();
@@ -42,5 +47,12 @@ public class BoardManager : MonoBehaviour
                 _tilemap.SetTile(new Vector3Int(x, y, 0), tile);
             }
         }
+        
+        Player.Spawn(this, new Vector2Int(1, 1));
+    }
+
+    public Vector3 CellToWorldPosition(Vector2Int cellPosition)
+    {
+        return _grid.GetCellCenterWorld((Vector3Int)cellPosition);
     }
 }
