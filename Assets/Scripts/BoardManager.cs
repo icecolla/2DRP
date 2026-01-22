@@ -5,43 +5,43 @@ public class BoardManager : MonoBehaviour
 {
     public class CellData
     {
-        public bool Passable;
+        public bool IsPassable;
     }
     
     private Tilemap _tilemap;
     private CellData[,] _boardData;
     private Grid _grid;
 
-    [SerializeField] private int _width;
-    [SerializeField] private int _height;
+    [SerializeField] private int _boardWidth;
+    [SerializeField] private int _boardHeight;
     [SerializeField] private Tile[] _groundTiles;
     [SerializeField] private Tile[] _wallTiles;
     
-    public PlayerController Player;
+    [SerializeField] private PlayerController Player;
 
     void Start()
     {
         _tilemap = GetComponentInChildren<Tilemap>();
         _grid = GetComponentInChildren<Grid>();
         
-        _boardData = new CellData[_width, _height];
+        _boardData = new CellData[_boardWidth, _boardHeight];
 
-        for (int y = 0; y < _height; ++y)
+        for (int y = 0; y < _boardHeight; ++y)
         {
-            for (int x = 0; x < _width; ++x)
+            for (int x = 0; x < _boardWidth; ++x)
             {
                 Tile tile;
                 _boardData[x, y] = new CellData();
 
-                if (x == 0 || y == 0 || x == _width - 1 || y == _height - 1)
+                if (x == 0 || y == 0 || x == _boardWidth - 1 || y == _boardHeight - 1)
                 {
                     tile = _wallTiles[Random.Range(0, _wallTiles.Length)];
-                    _boardData[x, y].Passable = false;
+                    _boardData[x, y].IsPassable = false;
                 }
                 else
                 {
                     tile =  _groundTiles[Random.Range(0, _groundTiles.Length)];
-                    _boardData[x, y].Passable = true;
+                    _boardData[x, y].IsPassable = true;
                 }
 
                 _tilemap.SetTile(new Vector3Int(x, y, 0), tile);
@@ -54,5 +54,11 @@ public class BoardManager : MonoBehaviour
     public Vector3 CellToWorldPosition(Vector2Int cellPosition)
     {
         return _grid.GetCellCenterWorld((Vector3Int)cellPosition);
+    }
+    
+    public CellData GetCellData(Vector2Int cellIndex)
+    {
+        if (cellIndex.x <  0 || cellIndex.x >= _boardWidth || cellIndex.y >= _boardHeight) return null;
+        return _boardData[cellIndex.x, cellIndex.y];
     }
 }

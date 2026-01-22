@@ -281,8 +281,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69ab646ddac146e468f1d52b61cc8f27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardManager
-  _width: 10
-  _height: 10
+  _boardWidth: 10
+  _boardHeight: 10
   _groundTiles:
   - {fileID: 11400000, guid: 3d613efd350ab1a44b53d3a5cca00601, type: 2}
   - {fileID: 11400000, guid: aabe85793ff166e41a316567e952d048, type: 2}
