@@ -19,7 +19,7 @@ public class BoardManager : MonoBehaviour
     
     [SerializeField] private PlayerController Player;
 
-    void Start()
+    public void Init()
     {
         _tilemap = GetComponentInChildren<Tilemap>();
         _grid = GetComponentInChildren<Grid>();
