@@ -47,8 +47,6 @@ public class BoardManager : MonoBehaviour
                 _tilemap.SetTile(new Vector3Int(x, y, 0), tile);
             }
         }
-        
-        Player.Spawn(this, new Vector2Int(1, 1));
     }
 
     public Vector3 CellToWorldPosition(Vector2Int cellPosition)
