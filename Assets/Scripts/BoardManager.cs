@@ -21,7 +21,7 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private Tile[] _groundTiles;
     [SerializeField] private Tile[] _wallTiles;
     
-    [SerializeField] private GameObject _food;
+    [SerializeField] private GameObject[] _foods;
     
     [SerializeField] private PlayerController Player;
 
@@ -74,14 +74,15 @@ public class BoardManager : MonoBehaviour
 
     private void GenerateFood()
     {
-        int foodCount = 5;
+        int foodCount = Random.Range(1, 5);
         for (int i = 0; i < foodCount; ++i)
         {
             int randomIndex = Random.Range(0, _emptyCellList.Count);
             Vector2Int cellPosition = _emptyCellList[randomIndex];
             _emptyCellList.RemoveAt(randomIndex);
             CellData data = _boardData[cellPosition.x, cellPosition.y];
-            GameObject newFood = Instantiate(_food);
+            int foodIndex = Random.Range(0, _foods.Length);
+            GameObject newFood = Instantiate(_foods[foodIndex]);
             newFood.transform.position = CellToWorldPosition(cellPosition);
             data.ContainedObject = newFood;
         }
