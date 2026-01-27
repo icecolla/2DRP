@@ -297,7 +297,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dc22123e521e5f84cb2c1fb995c68101, type: 2}
   - {fileID: 11400000, guid: 4efcf22dc9b89074581c53660523ba48, type: 2}
   - {fileID: 11400000, guid: 4032f5856910fb9428f6737726be7e67, type: 2}
-  _food: {fileID: 1130197136050217435, guid: a9311bc75626fb244aa18b5383f24d52, type: 3}
+  _foods:
+  - {fileID: 403832762006907768, guid: a9311bc75626fb244aa18b5383f24d52, type: 3}
+  - {fileID: 2392369024528196663, guid: 6ea1447bed4652e44a2a9bf71640c6f3, type: 3}
   Player: {fileID: 167387228}
 --- !u!1 &474628588
 GameObject:

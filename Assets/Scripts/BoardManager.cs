@@ -7,7 +7,7 @@ public class BoardManager : MonoBehaviour
     public class CellData
     {
         public bool IsPassable;
-        public GameObject ContainedObject;
+        public CellObject ContainedObject;
     }
     
     private Tilemap _tilemap;
@@ -21,7 +21,7 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private Tile[] _groundTiles;
     [SerializeField] private Tile[] _wallTiles;
     
-    [SerializeField] private GameObject[] _foods;
+    [SerializeField] private FoodObject[] _foods;
     
     [SerializeField] private PlayerController Player;
 
@@ -82,7 +82,7 @@ public class BoardManager : MonoBehaviour
             _emptyCellList.RemoveAt(randomIndex);
             CellData data = _boardData[cellPosition.x, cellPosition.y];
             int foodIndex = Random.Range(0, _foods.Length);
-            GameObject newFood = Instantiate(_foods[foodIndex]);
+            FoodObject newFood = Instantiate(_foods[foodIndex]);
             newFood.transform.position = CellToWorldPosition(cellPosition);
             data.ContainedObject = newFood;
         }

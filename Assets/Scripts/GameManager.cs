@@ -40,7 +40,12 @@ public class GameManager :  MonoBehaviour
 
     private void OnTurnHappen()
     {
-        _foodAmount -= 1;
+        ChangeFood(-1);
+    }
+
+    public void ChangeFood(int amount)
+    {
+        _foodAmount += amount;
         _foodLabel.text = "Food: " + _foodAmount;
         Debug.Log("Current amount of food : " + _foodAmount);
     }
