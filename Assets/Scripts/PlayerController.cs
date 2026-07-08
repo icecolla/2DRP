@@ -5,9 +5,29 @@ public class PlayerController : MonoBehaviour
 {
     private BoardManager _boardManager;
     private Vector2Int _cellPosition;
+    private bool _isGameOver;
+
+    public void Init()
+    {
+        _isGameOver = false;
+    }
+
+    public void GameOver()
+    {
+        _isGameOver = true;
+    }
 
     private void Update()
     {
+        if (_isGameOver)
+        {
+            if (Keyboard.current.enterKey.wasPressedThisFrame)
+            {
+                GameManager.Instance.StartNewGame();
+            }
+            return;
+        }
+
         Vector2Int newCellTarget = _cellPosition;
         bool hasMoved = false;
 

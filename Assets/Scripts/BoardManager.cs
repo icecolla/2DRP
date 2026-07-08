@@ -23,6 +23,7 @@ public class BoardManager : MonoBehaviour
     
     [SerializeField] private FoodObject[] _foods;
     [SerializeField] private WallObject[] _wallPrefabs;
+    [SerializeField] private ExitCellObject _exitCellPrefab;
 
     [SerializeField] private PlayerController Player;
 
@@ -75,10 +76,39 @@ public class BoardManager : MonoBehaviour
         
         // Remove position (1,1) from empty cells list (likely player spawn point)
         _emptyCellList.Remove(new Vector2Int(1, 1));
+
+        // Place the exit in the upper-right corner (opposite the player start) and reserve its cell
+        Vector2Int endCoord = new Vector2Int(_boardWidth - 2, _boardHeight - 2);
+        AddObject(Instantiate(_exitCellPrefab), endCoord);
+        _emptyCellList.Remove(endCoord);
+
         // Generate walls on random empty cells (before food so food won't spawn on them)
         GenerateWall();
         // Generate food items on random empty cells
         GenerateFood();
+    }
+
+    public void Clean()
+    {
+        // No board data yet, so exit early — nothing to clean
+        if (_boardData == null)
+            return;
+
+        for (int y = 0; y < _boardHeight; ++y)
+        {
+            for (int x = 0; x < _boardWidth; ++x)
+            {
+                CellData cellData = _boardData[x, y];
+
+                if (cellData.ContainedObject != null)
+                {
+                    // CAREFUL: destroy the whole GameObject, not just the CellObject component
+                    Destroy(cellData.ContainedObject.gameObject);
+                }
+
+                SetCellTile(new Vector2Int(x, y), null);
+            }
+        }
     }
 
     public Vector3 CellToWorldPosition(Vector2Int cellPosition)
