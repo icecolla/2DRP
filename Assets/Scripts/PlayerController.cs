@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     private Vector2Int _cellPosition;
     private bool _isGameOver;
 
+    public Vector2Int Cell => _cellPosition;
+
     public void Init()
     {
         _isGameOver = false;
