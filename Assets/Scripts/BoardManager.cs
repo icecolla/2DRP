@@ -86,6 +86,11 @@ public class BoardManager : MonoBehaviour
         return _grid.GetCellCenterWorld((Vector3Int)cellPosition);
     }
     
+    public Tile GetRandomGroundTile()
+    {
+        return _groundTiles[Random.Range(0, _groundTiles.Length)];
+    }
+
     public void SetCellTile(Vector2Int cellIndex, Tile tile)
     {
         _tilemap.SetTile(new Vector3Int(cellIndex.x, cellIndex.y, 0), tile);
