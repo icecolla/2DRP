@@ -300,7 +300,10 @@ MonoBehaviour:
   _foods:
   - {fileID: 403832762006907768, guid: a9311bc75626fb244aa18b5383f24d52, type: 3}
   - {fileID: 2392369024528196663, guid: 6ea1447bed4652e44a2a9bf71640c6f3, type: 3}
-  _wallPrefab: {fileID: 8211954548261569634, guid: 3241f1cc91f38c343be9c637e9ea0915, type: 3}
+  _wallPrefabs:
+  - {fileID: 8211954548261569634, guid: 3241f1cc91f38c343be9c637e9ea0915, type: 3}
+  - {fileID: 8211954548261569634, guid: 312641795e24d61438d7e0d792beb77e, type: 3}
+  - {fileID: 8211954548261569634, guid: 5443f5e7c268acd4790b9c18a243da8a, type: 3}
   Player: {fileID: 167387228}
 --- !u!1 &474628588
 GameObject:

@@ -4,6 +4,7 @@ using UnityEngine.Tilemaps;
 public class WallObject : CellObject
 {
     public Tile ObstacleTile;
+    public Tile DamagedObstacleTile;
     public int MaxHealth = 3;
 
     private int _healthPoint;
@@ -26,6 +27,11 @@ public class WallObject : CellObject
 
         if (_healthPoint > 0)
         {
+            // Show the damaged tile when the wall is nearly destroyed (1 HP left).
+            if (_healthPoint == 1 && DamagedObstacleTile != null)
+            {
+                GameManager.Instance.BoardManager.SetCellTile(_cell, DamagedObstacleTile);
+            }
             // Still standing: block the player.
             return false;
         }
