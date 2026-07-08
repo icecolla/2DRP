@@ -7,6 +7,8 @@ public class GameManager :  MonoBehaviour
     
     [SerializeField] private BoardManager _boardManager;
     [SerializeField] private PlayerController _playerController;
+
+    public BoardManager BoardManager => _boardManager;
     
     public TurnManager TurnManager { get; private set; }
     
