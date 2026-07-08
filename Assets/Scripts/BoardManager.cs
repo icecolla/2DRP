@@ -86,9 +86,9 @@ public class BoardManager : MonoBehaviour
         return _grid.GetCellCenterWorld((Vector3Int)cellPosition);
     }
     
-    public Tile GetRandomGroundTile()
+    public Tile GetCellTile(Vector2Int cellIndex)
     {
-        return _groundTiles[Random.Range(0, _groundTiles.Length)];
+        return _tilemap.GetTile<Tile>(new Vector3Int(cellIndex.x, cellIndex.y, 0));
     }
 
     public void SetCellTile(Vector2Int cellIndex, Tile tile)
@@ -102,6 +102,14 @@ public class BoardManager : MonoBehaviour
         return _boardData[cellIndex.x, cellIndex.y];
     }
 
+    private void AddObject(CellObject obj, Vector2Int coord)
+    {
+        CellData data = _boardData[coord.x, coord.y];
+        obj.transform.position = CellToWorldPosition(coord);
+        data.ContainedObject = obj;
+        obj.Init(coord);
+    }
+
     private void GenerateWall()
     {
         int wallCount = Random.Range(6, 10);
@@ -110,12 +118,8 @@ public class BoardManager : MonoBehaviour
             int randomIndex = Random.Range(0, _emptyCellList.Count);
             Vector2Int cellPosition = _emptyCellList[randomIndex];
             _emptyCellList.RemoveAt(randomIndex);
-            CellData data = _boardData[cellPosition.x, cellPosition.y];
             WallObject newWall = Instantiate(_wallPrefab);
-            // Init the wall (assigns its cell coordinate)
-            newWall.Init(cellPosition);
-            newWall.transform.position = CellToWorldPosition(cellPosition);
-            data.ContainedObject = newWall;
+            AddObject(newWall, cellPosition);
         }
     }
 
@@ -127,11 +131,9 @@ public class BoardManager : MonoBehaviour
             int randomIndex = Random.Range(0, _emptyCellList.Count);
             Vector2Int cellPosition = _emptyCellList[randomIndex];
             _emptyCellList.RemoveAt(randomIndex);
-            CellData data = _boardData[cellPosition.x, cellPosition.y];
             int foodIndex = Random.Range(0, _foods.Length);
             FoodObject newFood = Instantiate(_foods[foodIndex]);
-            newFood.transform.position = CellToWorldPosition(cellPosition);
-            data.ContainedObject = newFood;
+            AddObject(newFood, cellPosition);
         }
     }
 }

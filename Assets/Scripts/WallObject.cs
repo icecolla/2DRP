@@ -7,20 +7,22 @@ public class WallObject : CellObject
     public int MaxHealth = 3;
 
     private int _healthPoint;
+    private Tile _originalTile;
 
     public override void Init(Vector2Int cell)
     {
         base.Init(cell);
+
         _healthPoint = MaxHealth;
+
+        // Save the tile currently under the wall so we can restore it once destroyed.
+        _originalTile = GameManager.Instance.BoardManager.GetCellTile(cell);
         GameManager.Instance.BoardManager.SetCellTile(cell, ObstacleTile);
-        // Cell stays passable so the player can bump the wall; entry is gated by PlayerWantsToEnter.
     }
 
     public override bool PlayerWantsToEnter()
     {
-        // Each bump damages the wall.
         _healthPoint -= 1;
-        Debug.Log("Wall health: " + _healthPoint);
 
         if (_healthPoint > 0)
         {
@@ -28,11 +30,8 @@ public class WallObject : CellObject
             return false;
         }
 
-        // Destroyed: restore the ground tile, free the cell and remove this object.
-        BoardManager board = GameManager.Instance.BoardManager;
-        board.SetCellTile(_cell, board.GetRandomGroundTile());
-        BoardManager.CellData data = board.GetCellData(_cell);
-        data.ContainedObject = null;
+        // Destroyed: restore the original tile and let the player in.
+        GameManager.Instance.BoardManager.SetCellTile(_cell, _originalTile);
         Destroy(gameObject);
         return true;
     }
