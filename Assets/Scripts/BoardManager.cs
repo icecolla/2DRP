@@ -22,7 +22,8 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private Tile[] _wallTiles;
     
     [SerializeField] private FoodObject[] _foods;
-    
+    [SerializeField] private WallObject _wallPrefab;
+
     [SerializeField] private PlayerController Player;
 
     public void Init()
@@ -74,6 +75,8 @@ public class BoardManager : MonoBehaviour
         
         // Remove position (1,1) from empty cells list (likely player spawn point)
         _emptyCellList.Remove(new Vector2Int(1, 1));
+        // Generate walls on random empty cells (before food so food won't spawn on them)
+        GenerateWall();
         // Generate food items on random empty cells
         GenerateFood();
     }
@@ -87,6 +90,21 @@ public class BoardManager : MonoBehaviour
     {
         if (cellIndex.x <  0 || cellIndex.x >= _boardWidth || cellIndex.y >= _boardHeight) return null;
         return _boardData[cellIndex.x, cellIndex.y];
+    }
+
+    private void GenerateWall()
+    {
+        int wallCount = Random.Range(6, 10);
+        for (int i = 0; i < wallCount; ++i)
+        {
+            int randomIndex = Random.Range(0, _emptyCellList.Count);
+            Vector2Int cellPosition = _emptyCellList[randomIndex];
+            _emptyCellList.RemoveAt(randomIndex);
+            CellData data = _boardData[cellPosition.x, cellPosition.y];
+            WallObject newWall = Instantiate(_wallPrefab);
+            newWall.transform.position = CellToWorldPosition(cellPosition);
+            data.ContainedObject = newWall;
+        }
     }
 
     private void GenerateFood()
