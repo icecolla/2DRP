@@ -30,6 +30,12 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        // Wait until every object has finished sliding before accepting a new move
+        if (GameManager.Instance.ObjectMover.IsMoving)
+        {
+            return;
+        }
+
         Vector2Int newCellTarget = _cellPosition;
         bool hasMoved = false;
 
@@ -79,12 +85,21 @@ public class PlayerController : MonoBehaviour
     public void Spawn(BoardManager boardManager, Vector2Int cellPosition)
     {
         _boardManager = boardManager;
-        MoveTo(cellPosition);
+        // Snap instantly on spawn — no sliding from the old position
+        MoveTo(cellPosition, true);
     }
 
-    public void MoveTo(Vector2Int target)
+    public void MoveTo(Vector2Int target, bool immediate = false)
     {
         _cellPosition = target;
-        transform.position = _boardManager.CellToWorldPosition(target);
+
+        if (immediate)
+        {
+            transform.position = _boardManager.CellToWorldPosition(target);
+        }
+        else
+        {
+            GameManager.Instance.ObjectMover.AddToMove(transform, _boardManager.CellToWorldPosition(target));
+        }
     }
 }

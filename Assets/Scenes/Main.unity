@@ -304,6 +304,10 @@ MonoBehaviour:
   - {fileID: 8211954548261569634, guid: 3241f1cc91f38c343be9c637e9ea0915, type: 3}
   - {fileID: 8211954548261569634, guid: 312641795e24d61438d7e0d792beb77e, type: 3}
   - {fileID: 8211954548261569634, guid: 5443f5e7c268acd4790b9c18a243da8a, type: 3}
+  _exitCellPrefab: {fileID: 6257085370290053609, guid: c1e2a31816f02044ca0aa3a04aadfbca, type: 3}
+  _enemyPrefab: {fileID: 7197331683295385953, guid: c122f2172ac705b4da063cc4f22a2a51, type: 3}
+  _minEnemies: 1
+  _maxEnemies: 3
   Player: {fileID: 167387228}
 --- !u!1 &474628588
 GameObject:

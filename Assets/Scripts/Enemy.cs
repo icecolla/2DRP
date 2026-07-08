@@ -57,7 +57,8 @@ public class Enemy : CellObject
         // Add it to the target cell
         targetCell.ContainedObject = this;
         _cell = coord;
-        transform.position = board.CellToWorldPosition(coord);
+        // Slide smoothly to the new cell (registered with the shared mover)
+        GameManager.Instance.ObjectMover.AddToMove(transform, board.CellToWorldPosition(coord));
 
         return true;
     }

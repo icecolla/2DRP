@@ -12,6 +12,7 @@ public class GameManager :  MonoBehaviour
     public PlayerController PlayerController => _playerController;
     
     public TurnManager TurnManager { get; private set; }
+    public ObjectMover ObjectMover { get; private set; }
     
     private int _foodAmount = 100;
     private int _currentLevel = 1;
@@ -36,6 +37,7 @@ public class GameManager :  MonoBehaviour
         // Things that only need to happen once when the app launches
         TurnManager = new TurnManager();
         TurnManager.OnTick += OnTurnHappen;
+        ObjectMover = new ObjectMover();
 
         _foodLabel = UIDocument.rootVisualElement.Q<Label>("FoodLabel");
         _gameOverPanel = UIDocument.rootVisualElement.Q<VisualElement>("GameOverPanel");
@@ -52,6 +54,7 @@ public class GameManager :  MonoBehaviour
         _foodAmount = 20;
         _foodLabel.text = "Food: " + _foodAmount;
 
+        ObjectMover.Clear();
         _boardManager.Clean();
         _boardManager.Init();
 
@@ -61,11 +64,17 @@ public class GameManager :  MonoBehaviour
 
     public void NewLevel()
     {
+        ObjectMover.Clear();
         _boardManager.Clean();
         _boardManager.Init();
         _playerController.Spawn(_boardManager, new Vector2Int(1, 1));
 
         _currentLevel++;
+    }
+
+    private void Update()
+    {
+        ObjectMover.Tick();
     }
 
     private void OnTurnHappen()
