@@ -14,4 +14,9 @@ public class WallObject : CellObject
         BoardManager.CellData data = GameManager.Instance.BoardManager.GetCellData(cell);
         data.IsPassable = false;
     }
+
+    public override bool PlayerWantsToEnter()
+    {
+        return false;
+    }
 }
