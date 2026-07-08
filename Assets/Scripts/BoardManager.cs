@@ -27,37 +27,54 @@ public class BoardManager : MonoBehaviour
 
     public void Init()
     {
+        // Get reference to the Tilemap component from child objects
         _tilemap = GetComponentInChildren<Tilemap>();
+        // Get reference to the Grid component from child objects
         _grid = GetComponentInChildren<Grid>();
+        // Initialize list to keep track of empty/passable cells
         _emptyCellList = new List<Vector2Int>();
         
+        // Create 2D array to store board data for each cell
         _boardData = new CellData[_boardWidth, _boardHeight];
 
+        // Loop through each row of the board
         for (int y = 0; y < _boardHeight; ++y)
         {
+            // Loop through each column of the board
             for (int x = 0; x < _boardWidth; ++x)
             {
+                // Variable to hold the tile that will be placed at this position
                 Tile tile;
+                // Create new CellData object for this board position
                 _boardData[x, y] = new CellData();
 
+                // Check if current position is on the board edge (border)
                 if (x == 0 || y == 0 || x == _boardWidth - 1 || y == _boardHeight - 1)
                 {
+                    // Select a random wall tile from the wall tiles array
                     tile = _wallTiles[Random.Range(0, _wallTiles.Length)];
+                    // Mark this cell as not passable (wall)
                     _boardData[x, y].IsPassable = false;
                 }
                 else
                 {
+                    // Select a random ground tile from the ground tiles array
                     tile =  _groundTiles[Random.Range(0, _groundTiles.Length)];
+                    // Mark this cell as passable (ground)
                     _boardData[x, y].IsPassable = true;
                     
+                    // Add this passable cell position to the empty cells list
                     _emptyCellList.Add(new Vector2Int(x, y));
                 }
 
+                // Place the selected tile at the current grid position
                 _tilemap.SetTile(new Vector3Int(x, y, 0), tile);
             }
         }
         
+        // Remove position (1,1) from empty cells list (likely player spawn point)
         _emptyCellList.Remove(new Vector2Int(1, 1));
+        // Generate food items on random empty cells
         GenerateFood();
     }
 
