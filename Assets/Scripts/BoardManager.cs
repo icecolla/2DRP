@@ -102,6 +102,8 @@ public class BoardManager : MonoBehaviour
             _emptyCellList.RemoveAt(randomIndex);
             CellData data = _boardData[cellPosition.x, cellPosition.y];
             WallObject newWall = Instantiate(_wallPrefab);
+            // Init the wall (assigns its cell coordinate)
+            newWall.Init(cellPosition);
             newWall.transform.position = CellToWorldPosition(cellPosition);
             data.ContainedObject = newWall;
         }
