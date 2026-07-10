@@ -12,12 +12,14 @@ public class PlayerController : MonoBehaviour
     private Vector2Int _cellPosition;
     private bool _isGameOver;
     private Animator _animator;
+    private SpriteRenderer _spriteRenderer;
 
     public Vector2Int Cell => _cellPosition;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     public void Init()
@@ -33,6 +35,12 @@ public class PlayerController : MonoBehaviour
     public void Attack()
     {
         _animator.SetTrigger(AttackHash);
+    }
+
+    // xDirection: -1 to face left, 1 to face right. Sprites are authored facing right.
+    private void FaceTowards(int xDirection)
+    {
+        _spriteRenderer.flipX = xDirection < 0;
     }
 
     // Called by an enemy when it damages the player
@@ -78,11 +86,13 @@ public class PlayerController : MonoBehaviour
         {
             newCellTarget.x -= 1;
             hasMoved = true;
+            FaceTowards(-1);
         }
         else if (Keyboard.current.rightArrowKey.wasPressedThisFrame)
         {
             newCellTarget.x += 1;
             hasMoved = true;
+            FaceTowards(1);
         }
 
         if (hasMoved)

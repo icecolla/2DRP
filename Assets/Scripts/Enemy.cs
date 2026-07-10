@@ -11,10 +11,12 @@ public class Enemy : CellObject
 
     private int _currentHealth;
     private Animator _animator;
+    private SpriteRenderer _spriteRenderer;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         GameManager.Instance.TurnManager.OnTick += TurnHappened;
     }
 
@@ -98,6 +100,13 @@ public class Enemy : CellObject
 
         int absXDist = Mathf.Abs(xDist);
         int absYDist = Mathf.Abs(yDist);
+
+        // Turn to face the player (keep current facing when directly above/below).
+        // Enemy sprites are authored facing left, so flipX means "look right".
+        if (xDist != 0)
+        {
+            _spriteRenderer.flipX = xDist > 0;
+        }
 
         if ((xDist == 0 && absYDist == 1)
             || (yDist == 0 && absXDist == 1))
