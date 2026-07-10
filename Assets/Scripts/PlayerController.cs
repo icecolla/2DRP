@@ -3,11 +3,22 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    // Cached animator parameter hashes — cheaper than a string lookup on every call
+    private static readonly int MovingHash = Animator.StringToHash("Moving");
+    private static readonly int AttackHash = Animator.StringToHash("Attack");
+    private static readonly int HitHash = Animator.StringToHash("Hit");
+
     private BoardManager _boardManager;
     private Vector2Int _cellPosition;
     private bool _isGameOver;
+    private Animator _animator;
 
     public Vector2Int Cell => _cellPosition;
+
+    private void Awake()
+    {
+        _animator = GetComponent<Animator>();
+    }
 
     public void Init()
     {
@@ -17,6 +28,17 @@ public class PlayerController : MonoBehaviour
     public void GameOver()
     {
         _isGameOver = true;
+    }
+
+    public void Attack()
+    {
+        _animator.SetTrigger(AttackHash);
+    }
+
+    // Called by an enemy when it damages the player
+    public void Hit()
+    {
+        _animator.SetTrigger(HitHash);
     }
 
     private void Update()
@@ -29,6 +51,9 @@ public class PlayerController : MonoBehaviour
             }
             return;
         }
+
+        // Play the walk animation only while the player itself is sliding
+        _animator.SetBool(MovingHash, GameManager.Instance.ObjectMover.IsObjectMoving(transform));
 
         // Wait until every object has finished sliding before accepting a new move
         if (GameManager.Instance.ObjectMover.IsMoving)
@@ -66,17 +91,25 @@ public class PlayerController : MonoBehaviour
 
             if (cellData != null && cellData.IsPassable)
             {
-                GameManager.Instance.TurnManager.Tick();
                 CellObject containedObject = cellData.ContainedObject;
                 if (containedObject == null)
                 {
                     MoveTo(newCellTarget);
+                    // Tick AFTER the player's cell is updated, so enemies react to the new position
+                    GameManager.Instance.TurnManager.Tick();
                 }
                 else if (containedObject.PlayerWantsToEnter())
                 {
                     MoveTo(newCellTarget);
+                    GameManager.Instance.TurnManager.Tick();
                     // Call PlayerEntered AFTER moving the player! Otherwise not in cell yet
                     containedObject.PlayerEntered();
+                }
+                else
+                {
+                    // Blocked by a wall or an enemy: the player attacks it instead
+                    Attack();
+                    GameManager.Instance.TurnManager.Tick();
                 }
             }
         }

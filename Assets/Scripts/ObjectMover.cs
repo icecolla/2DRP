@@ -17,6 +17,17 @@ public class ObjectMover
 
     public bool IsMoving => _moving.Count > 0;
 
+    // True while this specific transform still has a pending move
+    public bool IsObjectMoving(Transform transform)
+    {
+        for (int i = 0; i < _moving.Count; ++i)
+        {
+            if (_moving[i].Transform == transform)
+                return true;
+        }
+        return false;
+    }
+
     public void AddToMove(Transform transform, Vector3 target)
     {
         _moving.Add(new MovingObject { Transform = transform, Target = target });

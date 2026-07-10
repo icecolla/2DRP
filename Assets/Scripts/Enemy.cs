@@ -2,14 +2,26 @@ using UnityEngine;
 
 public class Enemy : CellObject
 {
+    // Cached animator parameter hashes — cheaper than a string lookup on every call
+    private static readonly int MovingHash = Animator.StringToHash("Moving");
+    private static readonly int AttackHash = Animator.StringToHash("Attack");
+
     public int Health = 3;
     public int AttackDamage = 3;
 
     private int _currentHealth;
+    private Animator _animator;
 
     private void Awake()
     {
+        _animator = GetComponent<Animator>();
         GameManager.Instance.TurnManager.OnTick += TurnHappened;
+    }
+
+    private void Update()
+    {
+        // Play the walk animation only while this enemy itself is sliding
+        _animator.SetBool(MovingHash, GameManager.Instance.ObjectMover.IsObjectMoving(transform));
     }
 
     private void OnDestroy()
@@ -39,6 +51,13 @@ public class Enemy : CellObject
 
     private bool MoveTo(Vector2Int coord)
     {
+        // Never step onto the player: the player isn't stored as a ContainedObject,
+        // so the occupancy check below would not catch them
+        if (coord == GameManager.Instance.PlayerController.Cell)
+        {
+            return false;
+        }
+
         BoardManager board = GameManager.Instance.BoardManager;
         BoardManager.CellData targetCell = board.GetCellData(coord);
 
@@ -65,6 +84,13 @@ public class Enemy : CellObject
 
     private void TurnHappened()
     {
+        // Destroy() is deferred to the end of the frame, so a just-killed enemy
+        // would still receive this tick and act. Ignore it.
+        if (_currentHealth <= 0)
+        {
+            return;
+        }
+
         Vector2Int playerCell = GameManager.Instance.PlayerController.Cell;
 
         int xDist = playerCell.x - _cell.x;
@@ -76,8 +102,11 @@ public class Enemy : CellObject
         if ((xDist == 0 && absYDist == 1)
             || (yDist == 0 && absXDist == 1))
         {
-            // Adjacent to the player: attack (reduce food)
+            // Adjacent to the player: attack (reduce food).
+            // Apply damage before the triggers so a broken Animator can't swallow it.
             GameManager.Instance.ChangeFood(-AttackDamage);
+            _animator.SetTrigger(AttackHash);
+            GameManager.Instance.PlayerController.Hit();
         }
         else
         {
